@@ -76,10 +76,11 @@ LOG = logging.getLogger(__name__)
 _ENGINE_FACADE = None
 _LOCK = threading.Lock()
 
-association_models = { 
-    'himage' : models.ImageAssociation, 
-    'hproject' : models.ProjectAssociation, 
-    'hflavor': models.FlavorAssociation
+__association_models = { 
+    'image' : models.ImageAssociation, 
+    'project' : models.ProjectAssociation, 
+    'flavor': models.FlavorAssociation,
+    'network': models.NetworkAssociation
 }
 
 
@@ -241,7 +242,7 @@ def user_create(context, values):
         raise exception.UserExists(region=values['region'], name=values['name'])
     except db_exc.DBReferenceError as e:
         raise exception.IntegrityException(msg=str(e))
-    except db_exe.DBError as e:
+    except db_exc.DBError as e:
         LOG.exception('DB error:%s', e)
         raise exception.UserCreateFailed()
     return dict(user_ref)
@@ -287,7 +288,7 @@ def user_delete(context, id):
 ################### associations 
 
 def _association_get_model(obj):
-    return association_models.get(obj)
+    return __association_models.get(obj)
 
 def _association_query(context, id, obj, session=None):
     result = model_query(context, _association_get_model(obj), session=session).\
@@ -298,7 +299,7 @@ def _association_query(context, id, obj, session=None):
     return result
 
 @require_context
-def _association_get(context, id, obj):
+def association_get(context, id, obj):
     try:
         result = _association_query(context, id, obj)
     except db_exc.DBError:
@@ -308,28 +309,28 @@ def _association_get(context, id, obj):
     return result
 
 @require_context
-def _association_create(context, values, obj):
+def association_create(context, values, obj):
     _association_ref = _association_get_model(obj)()
     _association_ref.update(values)
     try:
         _association_ref.save()
     except db_exc.DBDuplicateEntry as e:
-        raise exception.AssociationExists(region=values['region'], obj=obj, name=values[obj])
+        raise exception.AssociationExists(region=values['region'], obj=obj, name=values['h'+obj])
     except db_exc.DBReferenceError as e:
         raise exception.IntegrityException(msg=str(e))
-    except db_exe.DBError as e:
+    except db_exc.DBError as e:
         LOG.exception('DB error:%s', e)
         raise exception.AssociationCreateFailed()
     return dict(_association_ref)
 
 @require_context
-def _association_update(context, id, values, obj):
+def association_update(context, id, values, obj):
     session = get_session()
     with session.begin():
         _association_ref = _association_query(context, id, obj, session=session)
         if not _association_ref:
             return exception.AssociationNotFound(id=uuid, obj=obj)
-        new_name = values.get(obj, _association_ref[obj])
+        new_name = values.get('h'+obj, _association_ref['h'+obj])
         new_region = values.get('region', _association_ref['region'])
         _association_ref.update(values)
         try:
@@ -339,12 +340,13 @@ def _association_update(context, id, values, obj):
     return _association_ref
 
 @require_context
-def _association_get_all(context, obj):
+def association_get_all(context, obj):
     _associations = model_query(context, _association_get_model(obj)).\
                      all()
     return [ dict(r) for r in _associations ]
 
-def _association_delete(context, id, obj):
+@require_context
+def association_delete(context, id, obj):
     session = get_session()
     with session.begin():
         _association_ref = _association_query(context, id, obj, session=session)
@@ -355,89 +357,22 @@ def _association_delete(context, id, obj):
 
 @require_context
 def association_get_by_hproject(context, hproject):
-    obj = 'hproject'
+    obj = 'project'
     result = model_query(context, _association_get_model(obj)).\
                filter_by(hproject=hproject)
     return result
 
 @require_context
 def association_get_by_hflavor(context, hflavor):
-    obj = 'hflavor'
+    obj = 'flavor'
     _associations = model_query(context, _association_get_model(obj)).\
                filter_by(hflavor=hflavor)
     return [ dict(r) for r in _associations ]
 
 @require_context
 def association_get_by_himage(context, himage):
-    obj = 'himage'
+    obj = 'image'
     _associations = model_query(context, _association_get_model(obj)).\
                filter_by(himage=himage)
     return [ dict(r) for r in _associations ]
-
-
-###################
-
-@require_context
-def project_association_get(context, id):
-    return _association_get(context, id, 'hproject')
-
-
-@require_context
-def project_association_create(context, values):
-    return _association_create(context, values, 'hproject')
-
-@require_context
-def project_association_update(context, id, values):
-    return _association_update(context, id, values, 'hproject')
-
-@require_context
-def project_association_get_all(context):
-    return _association_get_all(context, 'hproject')
-
-def project_association_delete(context, id):
-    return _association_delete(context, id, 'hproject')
-
-###################
-
-@require_context
-def flavor_association_get(context, id):
-    return _association_get(context, id, 'hflavor')
-
-
-@require_context
-def flavor_association_create(context, values):
-    return _association_create(context, values, 'hflavor')
-
-@require_context
-def flavor_association_update(context, id, values):
-    return _association_update(context, id, values, 'hflavor')
-
-@require_context
-def flavor_association_get_all(context):
-    return _association_get_all(context, 'hflavor')
-
-def flavor_association_delete(context, id):
-    return _association_delete(context, id, 'hflavor')
-
-###################
-
-@require_context
-def image_association_get(context, id):
-    return _association_get(context, id, 'himage')
-
-
-@require_context
-def image_association_create(context, values):
-    return _association_create(context, values, 'himage')
-
-@require_context
-def image_association_update(context, id, values):
-    return _association_update(context, id, values, 'himage')
-
-@require_context
-def image_association_get_all(context):
-    return _association_get_all(context, 'himage')
-
-def image_association_delete(context, id):
-    return _association_delete(context, id, 'himage')
 

@@ -71,10 +71,10 @@ class User(BASE, GWBase):
     )
 
     id = Column(Integer, primary_key=True)
-    uuid = Column(String(36), nullable=True)
-    name = Column(String(255), nullable=True)
-    password = Column(String(255), nullable=True)
-    region = Column(String(255), nullable=True)
+    uuid = Column(String(36), nullable=False)
+    name = Column(String(255), nullable=False)
+    password = Column(String(255), nullable=False)
+    region = Column(String(255), nullable=False)
     description = Column(String(1023))
 
 
@@ -88,11 +88,11 @@ class ProjectAssociation(BASE, GWBase):
     )
 
     id = Column(Integer, primary_key=True)
-    uuid = Column(String(36), nullable=True)
-    hproject = Column(String(36), nullable=True)
+    uuid = Column(String(36), nullable=False)
+    hproject = Column(String(36), nullable=False)
     userid = Column(String(36), ForeignKey("users.uuid"), nullable=False)
-    project = Column(String(36), nullable=True)
-    region = Column(String(255), nullable=True)
+    project = Column(String(36), nullable=False)
+    region = Column(String(255), nullable=False)
 
 class FlavorAssociation(BASE, GWBase):
     """Represents a flavor association."""
@@ -106,10 +106,10 @@ class FlavorAssociation(BASE, GWBase):
     )
 
     id = Column(Integer, primary_key=True)
-    uuid = Column(String(36), nullable=True)
-    hflavor = Column(String(36), nullable=True)
-    flavor = Column(String(36), nullable=True)
-    region = Column(String(255), nullable=True)
+    uuid = Column(String(36), nullable=False)
+    hflavor = Column(String(36), nullable=False)
+    flavor = Column(String(36), nullable=False)
+    region = Column(String(255), nullable=False)
 
 class ImageAssociation(BASE, GWBase):
     """Represents a image association."""
@@ -122,7 +122,23 @@ class ImageAssociation(BASE, GWBase):
     )
 
     id = Column(Integer, primary_key=True)
-    uuid = Column(String(36), nullable=True)
-    himage = Column(String(36), nullable=True)
-    image = Column(String(36), nullable=True)
-    region = Column(String(255), nullable=True)
+    uuid = Column(String(36), nullable=False)
+    himage = Column(String(36), nullable=False)
+    image = Column(String(36), nullable=False)
+    region = Column(String(255), nullable=False)
+
+class NetworkAssociation(BASE, GWBase):
+    """Represents a network association."""
+    __tablename__ = "network_association"
+    __table_args__ = (
+        # schema.UniqueConstraint("uuid", "deleted",
+                                # name="uniq_network0assoc_id0deleted"), 
+        schema.UniqueConstraint("hnetwork", "region", "deleted",
+                                name="uniq_network0hnetwork0region0deleted"), 
+    )
+
+    id = Column(Integer, primary_key=True)
+    uuid = Column(String(36), nullable=False)
+    hnetwork = Column(String(36), nullable=False)
+    network = Column(String(36), nullable=False)
+    region = Column(String(255), nullable=False)

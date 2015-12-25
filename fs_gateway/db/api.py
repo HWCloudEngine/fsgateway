@@ -82,61 +82,20 @@ def association_get_by_himage(context, himage):
 
 ###################
 
-def project_association_get(context, id):
-    return IMPL.project_association_get(context, id)
+def association_get(context, id, name):
+    return IMPL.association_get(context, id, name)
 
-def project_association_create(context, values):
-    """Create a project_association from the values dictionary."""
-    return IMPL.project_association_create(context, values)
+def association_create(context, values, name):
+    """Create a association from the values dictionary."""
+    return IMPL.association_create(context, values, name)
 
-def project_association_delete(context, id):
-    """Destroy the project_association or raise if it does not exist."""
-    return IMPL.project_association_delete(context, id)
+def association_delete(context, id, name):
+    """Destroy the association or raise if it does not exist."""
+    return IMPL.association_delete(context, id, name)
 
-def project_association_update(context, id, values):
-    return IMPL.project_association_update(context, id, values)
+def association_update(context, id, values, name):
+    return IMPL.association_update(context, id, values, name)
 
-def project_association_get_all(context):
+def association_get_all(context, name):
     """get all associations. """
-    return IMPL.project_association_get_all(context)
-
-###################
-
-def flavor_association_get(context, id):
-    return IMPL.flavor_association_get(context, id)
-
-def flavor_association_create(context, values):
-    """Create a flavor_association from the values dictionary."""
-    return IMPL.flavor_association_create(context, values)
-
-def flavor_association_delete(context, id):
-    """Destroy the flavor_association or raise if it does not exist."""
-    return IMPL.flavor_association_delete(context, id)
-
-def flavor_association_update(context, id, values):
-    return IMPL.flavor_association_update(context, id, values)
-
-def flavor_association_get_all(context):
-    """get all associations. """
-    return IMPL.flavor_association_get_all(context)
-
-###################
-
-def image_association_get(context, id):
-    return IMPL.image_association_get(context, id)
-
-def image_association_create(context, values):
-    """Create a image_association from the values dictionary."""
-    return IMPL.image_association_create(context, values)
-
-def image_association_delete(context, id):
-    """Destroy the image_association or raise if it does not exist."""
-    return IMPL.image_association_delete(context, id)
-
-def image_association_update(context, id, values):
-    return IMPL.image_association_update(context, id, values)
-
-def image_association_get_all(context):
-    """get all associations. """
-    return IMPL.image_association_get_all(context)
-    return IMPL.image_association_get_all(context)
+    return IMPL.association_get_all(context, name)
