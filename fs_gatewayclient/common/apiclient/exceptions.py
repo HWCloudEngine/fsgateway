@@ -25,7 +25,7 @@ import sys
 
 import six
 
-from fs_gatewayclient.openstack.common._i18n import _
+from fs_gatewayclient.common._i18n import _
 
 
 class ClientException(Exception):

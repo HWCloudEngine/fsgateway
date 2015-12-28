@@ -14,9 +14,9 @@
 from oslo.utils import encodeutils
 import six
 
-from fs_gatewayclient.openstack.common._i18n import _
-from fs_gatewayclient.openstack.common.apiclient import exceptions
-from fs_gatewayclient.openstack.common import uuidutils
+from fs_gatewayclient.common._i18n import _
+from fs_gatewayclient.common.apiclient import exceptions
+from fs_gatewayclient.common import uuidutils
 
 
 def find_resource(manager, name_or_id, **find_args):

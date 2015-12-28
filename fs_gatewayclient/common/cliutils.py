@@ -30,7 +30,7 @@ import prettytable
 import six
 from six import moves
 
-from fs_gatewayclient.openstack.common._i18n import _
+from fs_gatewayclient.common._i18n import _
 
 
 class MissingArgs(Exception):

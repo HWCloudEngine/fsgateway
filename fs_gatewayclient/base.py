@@ -25,7 +25,7 @@ import inspect
 import six
 
 from fs_gatewayclient import exceptions
-from fs_gatewayclient.openstack.common.apiclient import base
+from fs_gatewayclient.common.apiclient import base
 
 Resource = base.Resource
 

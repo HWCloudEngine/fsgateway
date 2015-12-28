@@ -24,7 +24,7 @@ import os
 import six
 from stevedore import extension
 
-from fs_gatewayclient.openstack.common.apiclient import exceptions
+from fs_gatewayclient.common.apiclient import exceptions
 
 
 _discovered_plugins = {}
@@ -41,7 +41,7 @@ def discover_auth_systems():
     def add_plugin(ext):
         _discovered_plugins[ext.name] = ext.plugin
 
-    ep_namespace = "fs_gatewayclient.openstack.common.apiclient.auth"
+    ep_namespace = "fs_gatewayclient.common.apiclient.auth"
     mgr = extension.ExtensionManager(ep_namespace)
     mgr.map(add_plugin)
 

@@ -35,8 +35,8 @@ import six
 
 from fs_gatewayclient import exceptions
 from fs_gatewayclient.i18n import _
-from fs_gatewayclient.openstack.common import cliutils
-from fs_gatewayclient.openstack.common import uuidutils
+from fs_gatewayclient.common import cliutils
+from fs_gatewayclient.common import uuidutils
 from fs_gatewayclient import utils
 
 

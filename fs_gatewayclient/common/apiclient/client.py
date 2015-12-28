@@ -36,8 +36,8 @@ except ImportError:
 from oslo.utils import importutils
 import requests
 
-from fs_gatewayclient.openstack.common._i18n import _
-from fs_gatewayclient.openstack.common.apiclient import exceptions
+from fs_gatewayclient.common._i18n import _
+from fs_gatewayclient.common.apiclient import exceptions
 
 
 _logger = logging.getLogger(__name__)
@@ -62,7 +62,7 @@ class HTTPClient(object):
       into terminal and send the same request with curl.
     """
 
-    user_agent = "fs_gatewayclient.openstack.common.apiclient"
+    user_agent = "fs_gatewayclient.common.apiclient"
 
     def __init__(self,
                  auth_plugin,

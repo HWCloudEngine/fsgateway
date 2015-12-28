@@ -30,8 +30,8 @@ from oslo.utils import strutils
 import six
 from six.moves.urllib import parse
 
-from fs_gatewayclient.openstack.common._i18n import _
-from fs_gatewayclient.openstack.common.apiclient import exceptions
+from fs_gatewayclient.common._i18n import _
+from fs_gatewayclient.common.apiclient import exceptions
 
 
 def getid(obj):

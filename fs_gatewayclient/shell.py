@@ -48,7 +48,7 @@ import fs_gatewayclient.auth_plugin
 from fs_gatewayclient import client
 from fs_gatewayclient import exceptions as exc
 from fs_gatewayclient.i18n import _
-from fs_gatewayclient.openstack.common import cliutils
+from fs_gatewayclient.common import cliutils
 from fs_gatewayclient import utils
 from fs_gatewayclient.v1_0 import shell as shell_v1_0
 
