@@ -1,6 +1,6 @@
 cd "$(dirname $0)"
 
-cp fs-gateway-api fs-gateway-proxy /usr/bin
+cp fs-gateway-api fs-gateway-proxy fs-gateway-manage /usr/bin
 
 # create  log directory
 mkdir -p /var/log/fusionsphere/component/fs-gateway
@@ -15,5 +15,5 @@ done
 su gaussdba -c "cd;/opt/gaussdb/app/bin/gsql -W FusionSphere123  POSTGRES -c 'CREATE DATABASE fs_gateway OWNER openstack;' "
 
 # create fs_gateway db tables
-python ./gw-manage --config-file=/etc/fs-gateway/fs-gateway.conf db sync
+python ./fs-gateway-manage --config-file=/etc/fs-gateway/fs-gateway.conf db sync
 
