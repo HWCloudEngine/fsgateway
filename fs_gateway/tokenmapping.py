@@ -144,7 +144,7 @@ class TokenMappingMiddleware(wsgi.Middleware):
             keystoneclient = kc.Client(**kwargs)
 
             token_info = keystoneclient.tokens.authenticate(username=CONF.get('cascaded_admin_user'),
-                                                            tenant_id=CONF.get('cascaded_tenant_name'),
+                                                            tenant_name=CONF.get('cascaded_tenant_name'),
                                                             password=CONF.get('cascaded_admin_password'),
                                                             token=None, return_raw=False)
 
