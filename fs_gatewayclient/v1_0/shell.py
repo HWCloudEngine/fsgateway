@@ -240,19 +240,6 @@ def do_project_association_create(cs, args):
 
 ###### flavor association 
 
-def _print_association(association):
-    info = association._info.copy()
-    # ignore links, we don't need to present those
-    
-    utils.print_dict(info)
-
-def _find_association(cs, association):
-    """Get a association by name, ID."""
-    try:
-        return utils.find_resource(cs.associations, association)
-    except exceptions.NotFound as e:
-        raise e
-
 def do_flavor_association_list(cs, args):
     """Print a list of available 'flavor_associations'."""
     name="flavor"
@@ -324,19 +311,6 @@ def do_flavor_association_create(cs, args):
     _print_association_list(name, [f])
 
 ###### image association 
-def _print_association(association):
-    info = association._info.copy()
-    # ignore links, we don't need to present those
-    
-    utils.print_dict(info)
-
-def _find_association(cs, association):
-    """Get a association by name, ID."""
-    try:
-        return utils.find_resource(cs.associations, association)
-    except exceptions.NotFound as e:
-        raise e
-
 def do_image_association_list(cs, args):
     """Print a list of available 'image_associations'."""
     name="image"
@@ -408,19 +382,6 @@ def do_image_association_create(cs, args):
     _print_association_list(name, [f])
 
 ###### network association 
-def _print_association(association):
-    info = association._info.copy()
-    # ignore links, we don't need to present those
-    
-    utils.print_dict(info)
-
-def _find_association(cs, association):
-    """Get a association by name, ID."""
-    try:
-        return utils.find_resource(cs.associations, association)
-    except exceptions.NotFound as e:
-        raise e
-
 def do_network_association_list(cs, args):
     """Print a list of available 'network_associations'."""
     name="network"
@@ -491,6 +452,76 @@ def do_network_association_create(cs, args):
     f = cs.associations.create(**info)
     _print_association_list(name, [f])
 
+###### subnet association 
+def do_subnet_association_list(cs, args):
+    """Print a list of available 'subnet_associations'."""
+    name="subnet"
+    cs.associations.set_name(name)
+    association = cs.associations.list()
+    _print_association_list(name, association)
+
+@utils.arg('subnet_association',
+    metavar='<subnet_association>',
+    help=_("Name or ID of the subnet_association to delete"))
+def do_subnet_association_delete(cs, args):
+    """Delete a specific subnet_association"""
+    name="subnet"
+    cs.associations.set_name(name)
+    association = _find_association(cs, args.subnet_association)
+    cs.associations.delete(association)
+    _print_association_list(name, [association])
+
+
+@utils.arg('subnet_association',
+     metavar='<subnet_association>',
+     help=_("Name or ID of subnet_association"))
+def do_subnet_association_show(cs, args):
+    """Show details about the given subnet_association."""
+    name="subnet"
+    cs.associations.set_name(name)
+    association = _find_association(cs, args.subnet_association)
+    _print_association(association)
+
+@utils.arg('id',
+     metavar='<id>',
+     help=_("Id of the subnet association"))
+@utils.arg('--hsubnet',
+     metavar='<hsubnet>',
+     help=_("Cascading subnet id of the subnet association "))
+@utils.arg('--subnet',
+     metavar='<subnet>',
+     help=_("Cascaded subnet id of the subnet association"))
+@utils.arg('--region',
+     metavar='<region>',
+     help=_("Region name of the subnet association"))
+def do_subnet_association_update(cs, args):
+    """Update a subnet association"""
+    name="subnet"
+    cs.associations.set_name(name)
+    f = cs.associations.update(args.id, hsubnet=args.hsubnet, subnet=args.subnet, 
+                                region=args.region)
+    _print_association_list(name, [f])
+
+@utils.arg('hsubnet',
+     metavar='<hsubnet>',
+     help=_("Cascading subnet id of the new subnet association"))
+@utils.arg('subnet',
+     metavar='<subnet>',
+     help=_("Cascaded subnet id of the new subnet association"))
+@utils.arg('region',
+     metavar='<region>',
+     help=_("Region name of the new subnet association"))
+def do_subnet_association_create(cs, args):
+    """Create a new subnet_association"""
+    name = "subnet"
+    cs.associations.set_name(name)
+    info = {
+            "hsubnet" : args.hsubnet, 
+            "subnet": args.subnet, 
+            "region": args.region, 
+            }
+    f = cs.associations.create(**info)
+    _print_association_list(name, [f])
 
 def do_version_list(cs, args):
     """List all API versions."""
