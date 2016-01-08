@@ -9,6 +9,8 @@ import uuid
 
 from fs_gateway.views import association as association_view
 
+_resource_names = ('project', 'image', 'network','flavor', 'subnet')
+
 def _gen_uuid():
     return unicode(uuid.uuid4())
 
@@ -44,7 +46,7 @@ class Controller(wsgi.Application):
 
 def create_router(mapper):
 
-    for p in ('project', 'image', 'network','flavor'):
+    for p in _resource_names:
         controller = Controller(p)
 
         path = '/%s_association' % p
@@ -81,14 +83,26 @@ def _filter_by_region(assocs, region, obj):
         return (res.get(obj),  res.get("userid"))
     return res.get(obj)
 
+def get_association_by_csd(id, region, resource_name):
+    result = db.association_get_by_csd(defaultContext, id, resource_name)
+    return _filter_by_region(result, region, resource_name)
+
+def get_association_by_hid(hid, region, resource_name):
+    result = db.association_get_by_hid(defaultContext, hid, resource_name)
+    return _filter_by_region(result, region, resource_name)
+
 def project_association(project_id, region):
-    result = db.association_get_by_hproject(defaultContext, project_id)
-    return _filter_by_region(result, region, 'project')
+    return get_association_by_hid(project_id, region, 'project')
 
 def flavor_association(flavor_id, region):
-    result = db.association_get_by_hflavor(defaultContext, flavor_id)
-    return _filter_by_region(result, region, 'flavor')
+    return get_association_by_hid(flavor_id, region, 'flavor')
 
 def image_association(image_id, region):
-    result = db.association_get_by_himage(defaultContext, image_id)
-    return _filter_by_region(result, region, 'image')
+    return get_association_by_hid(image_id, region, 'image')
+
+def network_association(network_id, region):
+    return get_association_by_hid(network_id, region, 'network')
+
+def subnet_association(subnet_id, region):
+    return get_association_by_hid(subnet_id, region, 'subnet')
+

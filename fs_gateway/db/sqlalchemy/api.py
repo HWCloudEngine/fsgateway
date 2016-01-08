@@ -80,7 +80,8 @@ __association_models = {
     'image' : models.ImageAssociation, 
     'project' : models.ProjectAssociation, 
     'flavor': models.FlavorAssociation,
-    'network': models.NetworkAssociation
+    'network': models.NetworkAssociation,
+    'subnet': models.SubnetAssociation
 }
 
 
@@ -355,24 +356,17 @@ def association_delete(context, id, obj):
         #_association_ref.soft_delete(session=session)
         session.delete(_association_ref)
 
-@require_context
-def association_get_by_hproject(context, hproject):
-    obj = 'project'
-    result = model_query(context, _association_get_model(obj)).\
-               filter_by(hproject=hproject)
-    return result
 
 @require_context
-def association_get_by_hflavor(context, hflavor):
-    obj = 'flavor'
+def association_get_by_hid(context, hid, obj):
+    filter = {'h' + obj : hid }
     _associations = model_query(context, _association_get_model(obj)).\
-               filter_by(hflavor=hflavor)
+               filter_by(**filter)
     return [ dict(r) for r in _associations ]
 
 @require_context
-def association_get_by_himage(context, himage):
-    obj = 'image'
+def association_get_by_csd(context, id, obj):
+    filter = { obj : id }
     _associations = model_query(context, _association_get_model(obj)).\
-               filter_by(himage=himage)
+               filter_by(**filter)
     return [ dict(r) for r in _associations ]
-

@@ -76,16 +76,14 @@ def get_value_from_dict(d, keys):
                 if r: return r
     return None
 
-version_re = r'^/+(?P<version>v[-0-9.]+)'
+_version_re = r'^/+(?P<version>v[-0-9.]+)/+'
+_project_re = re.compile(_version_re + r'(?P<tenant_id>[0-9a-f]{32})\b')
+_image_re = re.compile(_version_re + r'images/(?P<image_id>[-0-9a-zA-Z]+)')
 
 def get_project_id(req):
     """ return project id from request. """
 
-    path_info = req.environ.get('PATH_INFO')
-    uuid='[0-9a-f]{32}'
-    tenant_re = r'/(?P<tenant_id>%s)\b' % uuid
-    m = re.match(version_re + '(' + tenant_re + ')', path_info)
-
+    m = _project_re.match(req.environ.get('PATH_INFO'))
     if m and m.group('tenant_id'):
         return m.group('tenant_id')
     return None
@@ -95,11 +93,7 @@ def get_project_id(req):
 def get_image_id(req):
     """ return image id from request. """
 
-    uuid = '[-0-9a-zA-Z]+'
-    image_re = r'/images/(?P<image_id>%s)' % uuid
-    all_re = version_re + '(' +  image_re + ')'
-    path_info = req.environ.get('PATH_INFO')
-    m = re.match(all_re, path_info)
+    m = _image_re.search(req.environ.get('PATH_INFO'))
     if m and m.group('image_id'):
         return m.group('image_id')
     return get_value_from_dict(req.environ.get('openstack.params'), ["imageRef"])
@@ -117,3 +111,4 @@ def get_flavor_id(req):
         return m.group('flavor_id')
     """
     return get_value_from_dict(req.environ.get('openstack.params'), ["flavorRef"])
+

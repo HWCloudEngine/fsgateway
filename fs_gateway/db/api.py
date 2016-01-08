@@ -71,16 +71,6 @@ def user_get_all(context):
     return IMPL.user_get_all(context)
 
 ###################
-def association_get_by_hproject(context, hproject):
-    return IMPL.association_get_by_hproject(context, hproject)
-
-def association_get_by_hflavor(context, hflavor):
-    return IMPL.association_get_by_hflavor(context, hflavor)
-
-def association_get_by_himage(context, himage):
-    return IMPL.association_get_by_himage(context, himage)
-
-###################
 
 def association_get(context, id, name):
     return IMPL.association_get(context, id, name)
@@ -99,3 +89,9 @@ def association_update(context, id, values, name):
 def association_get_all(context, name):
     """get all associations. """
     return IMPL.association_get_all(context, name)
+
+def association_get_by_hid(context, hid, resource_name):
+    return IMPL.association_get_by_hid(context, hid, resource_name)
+
+def association_get_by_csd(context, id, resource_name):
+    return IMPL.association_get_by_csd(context, id, resource_name)

@@ -30,7 +30,7 @@ class ViewBuilder(object):
         obj = {
             "association": {
                 "id": assoc["uuid"],
-                "h" + name: assoc[name],
+                "h" + name: assoc[ "h" + name],
                 name : assoc[name],
                 "region": assoc["region"],
             }

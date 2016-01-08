@@ -47,7 +47,7 @@ from fs_gateway.common.gettextutils import _
 from fs_gateway.common import importutils
 from fs_gateway.common import jsonutils
 from fs_gateway.common import local
-from nova.huawei.openstack.common.hw_log_handler import FSSysLogHandler
+#from nova.huawei.openstack.common.hw_log_handler import FSSysLogHandler
 # NOTE(flaper87): Pls, remove when graduating this module
 # from the incubator.
 from fs_gateway.common.strutils import mask_password  # noqa
@@ -491,8 +491,8 @@ def _setup_logging_from_conf(project, version):
             if CONF.use_syslog_rfc_format:
                 syslog = RFCSysLogHandler(facility=facility)
             else:
-                syslog = FSSysLogHandler(facility=facility)
-                #import pdb;pdb.set_trace()
+                syslog = RFCSysLogHandler(facility=facility)
+                # syslog = FSSysLogHandler(facility=facility)
             log_root.addHandler(syslog)
         except socket.error:
             log_root.error('Unable to add syslog handler. Verify that syslog'

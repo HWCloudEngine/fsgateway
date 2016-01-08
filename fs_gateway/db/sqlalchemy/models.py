@@ -142,3 +142,19 @@ class NetworkAssociation(BASE, GWBase):
     hnetwork = Column(String(36), nullable=False)
     network = Column(String(36), nullable=False)
     region = Column(String(255), nullable=False)
+
+class SubnetAssociation(BASE, GWBase):
+    """Represents a subnet association."""
+    __tablename__ = "subnet_association"
+    __table_args__ = (
+        # schema.UniqueConstraint("uuid", "deleted",
+                                # name="uniq_subnet0assoc_id0deleted"), 
+        schema.UniqueConstraint("hsubnet", "region", "deleted",
+                                name="uniq_subnet0hsubnet0region0deleted"), 
+    )
+
+    id = Column(Integer, primary_key=True)
+    uuid = Column(String(36), nullable=False)
+    hsubnet = Column(String(36), nullable=False)
+    subnet = Column(String(36), nullable=False)
+    region = Column(String(255), nullable=False)
