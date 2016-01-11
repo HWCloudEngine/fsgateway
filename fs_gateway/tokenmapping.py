@@ -117,35 +117,19 @@ class TokenMappingMiddleware(wsgi.Middleware):
         
         cascaded_keystone_url = CONF.get('cascaded_keystone_url_map')[region]
 
-        if cascaded_tenant_id:
-            kwargs = {
-                        'auth_url': cascaded_keystone_url,
-                        'tenant_id': cascaded_tenant_id,
-                        'username': username,
-                        'password': password,
-                        'insecure': True
-                    }
-            LOG.info('the kwargs is %s' %str(kwargs))
-            keystoneclient = kc.Client(**kwargs)
+        kwargs = {
+                    'auth_url': cascaded_keystone_url,
+                    'tenant_id': cascaded_tenant_id,
+                    'username': username,
+                    'password': password,
+                    'insecure': True
+                }
+        LOG.info('the kwargs is %s' %str(kwargs))
+        keystoneclient = kc.Client(**kwargs)
 
-            token_info = keystoneclient.tokens.authenticate(username=username,
-                                                            tenant_id=cascaded_tenant_id,
-                                                            password=password,
-                                                            token=None, return_raw=False)
-        else:
-            kwargs = {
-                        'username':CONF.get('cascaded_admin_user'),
-                        'password': CONF.get('cascaded_admin_password'),
-                        'auth_url':  CONF.get('cascaded_keystone_url_map')[region],
-                        'insecure': True,
-                        'tenant_name': CONF.get('cascaded_tenant_name')
-                    }
-            LOG.info('the kwargs is %s' %str(kwargs))
-            keystoneclient = kc.Client(**kwargs)
-
-            token_info = keystoneclient.tokens.authenticate(username=CONF.get('cascaded_admin_user'),
-                                                            tenant_name=CONF.get('cascaded_tenant_name'),
-                                                            password=CONF.get('cascaded_admin_password'),
-                                                            token=None, return_raw=False)
+        token_info = keystoneclient.tokens.authenticate(username=username,
+                                                        tenant_id=cascaded_tenant_id,
+                                                        password=password,
+                                                        token=None, return_raw=False)
 
         return token_info

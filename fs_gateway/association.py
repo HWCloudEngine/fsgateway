@@ -85,7 +85,7 @@ def _filter_by_region(assocs, region, obj):
 
 def get_association_by_csd(id, region, resource_name):
     result = db.association_get_by_csd(defaultContext, id, resource_name)
-    return _filter_by_region(result, region, resource_name)
+    return _filter_by_region(result, region, 'h' + resource_name)
 
 def get_association_by_hid(hid, region, resource_name):
     result = db.association_get_by_hid(defaultContext, hid, resource_name)

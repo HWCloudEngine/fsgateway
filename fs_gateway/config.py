@@ -32,16 +32,9 @@ opts = [
     cfg.IntOpt('rest_port',
                default=7077, help='Port of fs gateway rest service.'),
     cfg.IntOpt('proxy_port',
-               default=7080, help='Port of fs gateway proxy service.'),
+               default=8899, help='Port of fs gateway proxy service.'),
     cfg.DictOpt('cascaded_keystone_url_map',
                help='cascaded keystone auth url map.'),
-    cfg.StrOpt('cascaded_admin_user',
-           help='cascaded keystone admin user.'),
-    cfg.StrOpt('cascaded_tenant_name',
-           help='cascaded keystone tenant name'),
-    cfg.StrOpt('cascaded_admin_password',
-               secret=True,
-               help='cascaded keystone admin user password.'),
         
     cfg.StrOpt('cascading_keystone_url',
                help='cascading keystone auth url.'),
@@ -64,7 +57,7 @@ def parse_args(argv, default_config_files=None):
     rpc.set_defaults(control_exchange='fs_gateway')
     debugger.register_cli_opts()
     CONF(argv[1:],
-         project='fs_gateway',
+         project='fs-gateway',
          version=version.version_string(),
          default_config_files=default_config_files)
     rpc.init(CONF)

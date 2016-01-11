@@ -71,6 +71,7 @@ class NetworkMappingMiddleware(wsgi.Middleware):
                     if hid:
                         net['name'] = name + '@' + hid
                         updated = True
+                        LOG.debug('### intercept %s update response operation %s', name, hid)
             if updated:
                 response.json_body = resp_dict
 
