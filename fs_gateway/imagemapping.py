@@ -14,8 +14,6 @@ class ImageMappingMiddleware(wsgi.Middleware):
     @webob.dec.wsgify
     def __call__(self, req):
 
-        #LOG.error('the env is %s' %str(req.environ))
-        LOG.debug('the function of request is %s ' %req.environ.get('REQUEST_METHOD'))
         http_host = req.environ.get('HTTP_HOST')
         LOG.debug('the request http_host is %s' %http_host) 
         host_info = http_host.rpartition('.')[0].partition('.')

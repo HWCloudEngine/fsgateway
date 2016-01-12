@@ -25,9 +25,10 @@ class ProjectMappingMiddleware(wsgi.Middleware):
     @webob.dec.wsgify
     def __call__(self, req):
 
-        LOG.error('the env in projectMapping')
+        LOG.debug('############## path_info %s ### query %s -X %s', 
+                req.environ.get('PATH_INFO'), req.environ.get('QUERY_STRING'),
+                req.environ.get('REQUEST_METHOD'))
 
-        # if req.environ.get('REQUEST_METHOD') == 'POST': import pdb;pdb.set_trace()
         cascading_tenant_id = req.environ.get('CASCADING_TENANT_ID')
         if cascading_tenant_id:
             cascaded_tenant_id = req.environ.get('CASCADED_TENANT_ID')
@@ -37,9 +38,6 @@ class ProjectMappingMiddleware(wsgi.Middleware):
                 cascaded_tenant_id = cascading_tenant_id
         
     
-            LOG.debug('############## path_info %s ### query %s -X %s', 
-                    req.environ.get('PATH_INFO'), req.environ.get('QUERY_STRING'),
-                    req.environ.get('REQUEST_METHOD'))
             for field in ('PATH_INFO', 'QUERY_STRING', 'RAW_PATH_INFO'):
                 if req.environ.get(field):
                     req.environ[field] = req.environ[field].replace(cascading_tenant_id,cascaded_tenant_id)

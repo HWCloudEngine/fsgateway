@@ -17,36 +17,8 @@ from keystoneclient.v2_0 import client as kc
 from oslo.config import cfg
 CONF = cfg.CONF
 
-service_type_mapping = {
-                        'backup':'backup',
-                        'metering':'metering',
-                        'volume' :'volume',
-                        'volumev2' :'volumev2',
-                        'collect':'collect',
-                        'cps' :'cps',
-                        'ec2':'ec2',
-                        'elb':'elb',
-                        'oam':'oam',
-                        'image':'image',
-                        's3':'s3',
-                        'orchestration' :'orchestration',
-                        'baremetal':'baremetal',
-                        'identity':'identity',
-                        'log':'log',
-                        'network':'network',
-                        'compute':'compute',
-                        's3':'s3',
-                        'object-store' :'object-store',
-                        'upgrade':'upgrade'
-                    }
 
-
-tenant_name = 'admin'
-
-user_name ='cloud_admin'
-password = 'FusionSphere123'
-
-class fs_gateway():
+class ProxyAPP():
     def __init__(self):
         pass
     def __call__(self, environ, start_response):
@@ -61,7 +33,7 @@ class fs_gateway():
             host_info = http_host.rpartition('.')[0].partition('.')
             region = host_info[-1].rpartition('.')[0]
             service_type_info = host_info[0].rpartition('--')[-1]
-            service_type =service_type_mapping.get(service_type_info)
+            service_type = service_type_info
 
             kwargs = {
                         'auth_url': cascading_keystone_url,
@@ -100,5 +72,3 @@ class fs_gateway():
 
         return cls()
 
-#     def _get_management_url(self, kc, **kwargs):
-#         return kc.service_catalog.url_for(**kwargs)

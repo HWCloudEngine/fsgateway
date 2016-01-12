@@ -38,7 +38,7 @@ class TokenMappingMiddleware(wsgi.Middleware):
                             'insecure': True,
                             'tenant_name': CONF.get('cascading_tenant_name')
                 }
-                LOG.info('the kwargs is %s' %str(kwargs))
+                LOG.info('Get the cacaseding token_info.')
                 keystoneclient = kc.Client(**kwargs)
                 cascading_tenant_id = None
                 # token_info = keystoneclient.authenticate(token=old_token)
@@ -49,7 +49,7 @@ class TokenMappingMiddleware(wsgi.Middleware):
                 cascading_tenant_id = None
                 pass
             except exceptions.NotFound:
-                LOG.info('############### token not found ##########################')
+                LOG.warning('############### token not found ##########################')
                 with excutils.save_and_reraise_exception():
                     LOG.error('get cascading tenant id failed.exception is %s' %traceback.format_exc())   
             except Exception as e:
@@ -124,7 +124,8 @@ class TokenMappingMiddleware(wsgi.Middleware):
                     'password': password,
                     'insecure': True
                 }
-        LOG.info('the kwargs is %s' %str(kwargs))
+        LOG.info('the cacaseded auth_url %s, tenant_id %s, username %s', 
+                cascaded_keystone_url, cascaded_tenant_id, username)
         keystoneclient = kc.Client(**kwargs)
 
         token_info = keystoneclient.tokens.authenticate(username=username,
