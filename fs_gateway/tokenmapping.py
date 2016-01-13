@@ -41,7 +41,6 @@ class TokenMappingMiddleware(wsgi.Middleware):
                 LOG.info('Get the cacaseding token_info.')
                 keystoneclient = kc.Client(**kwargs)
                 cascading_tenant_id = None
-                # token_info = keystoneclient.authenticate(token=old_token)
                 token_info = keystoneclient.tokens._get(kwargs['auth_url'] + "/tokens/%s" % old_token, 'access')
                 
                 cascading_tenant_id = token_info.tenant['id']
@@ -49,7 +48,7 @@ class TokenMappingMiddleware(wsgi.Middleware):
                 cascading_tenant_id = None
                 pass
             except exceptions.NotFound:
-                LOG.warning('############### token not found ##########################')
+                LOG.warning('token not found %s', old_token)
                 with excutils.save_and_reraise_exception():
                     LOG.error('get cascading tenant id failed.exception is %s' %traceback.format_exc())   
             except Exception as e:
@@ -60,6 +59,9 @@ class TokenMappingMiddleware(wsgi.Middleware):
     def __call__(self, req):
       
         old_token = req.environ.get('HTTP_X_AUTH_TOKEN')
+            
+        if not old_token or not req.environ.get('HTTP_HOST').startswith(CONF.get('http_host_prefix')):
+            return render_response(status=(401, 'Unauthorized'))
         user_info = cascading_token_to_user.get(old_token)
         new_token = None
         expire = CONF.get('cascaded_token_expiration')

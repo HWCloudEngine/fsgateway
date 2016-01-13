@@ -46,6 +46,9 @@ opts = [
                secret=True,
                help='cascading keystone admin user password.'),
     cfg.IntOpt('cascaded_token_expiration', default=86400, help='cascaded token default time (seconds)'),
+    cfg.StrOpt('http_host_prefix',
+           default='gateway--', 
+           help='cascading keystone tenant name'),
 ]
 
 CONF.register_opts(opts)
