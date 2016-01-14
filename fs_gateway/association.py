@@ -72,37 +72,37 @@ def create_router(mapper):
                        conditions=dict(method=['DELETE']))
 
 
-def _filter_by_region(assocs, region, obj):
-    res = {}
-    if assocs:
-        for a in assocs:
-            if region == a.get('region'):
-                res = a
-                break
-    if obj == 'project':
-        return (res.get(obj),  res.get("userid"))
-    return res.get(obj)
+def association_get(resource_name, **search_opts):
+    result = db.association_get(defaultContext, resource_name, **search_opts)
+    return result
 
-def get_association_by_csd(id, region, resource_name):
-    result = db.association_get_by_csd(defaultContext, id, resource_name)
-    return _filter_by_region(result, region, 'h' + resource_name)
+def association_get_hids_by_csd(csd, region, resource_name):
+    search_opts = {'region' : region, resource_name : csd}
+    result = association_get(resource_name, **search_opts)
+    return [r.get('h' + resource_name) for r in result]
 
-def get_association_by_hid(hid, region, resource_name):
-    result = db.association_get_by_hid(defaultContext, hid, resource_name)
-    return _filter_by_region(result, region, resource_name)
+def association_get_csd_by_hid(hid, region, resource_name):
+    search_opts = {'region' : region, 'h' + resource_name : hid}
+    result = association_get(resource_name, **search_opts)
+    if not result:
+        result = [{}]
+    result = result[0]
+    if resource_name == 'project':
+        return (result.get(resource_name), result.get('userid'))
+    return result.get(resource_name)
 
 def project_association(project_id, region):
-    return get_association_by_hid(project_id, region, 'project')
+    return association_get_csd_by_hid(project_id, region, 'project')
 
 def flavor_association(flavor_id, region):
-    return get_association_by_hid(flavor_id, region, 'flavor')
+    return association_get_csd_by_hid(flavor_id, region, 'flavor')
 
 def image_association(image_id, region):
-    return get_association_by_hid(image_id, region, 'image')
+    return association_get_csd_by_hid(image_id, region, 'image')
 
 def network_association(network_id, region):
-    return get_association_by_hid(network_id, region, 'network')
+    return association_get_csd_by_hid(network_id, region, 'network')
 
 def subnet_association(subnet_id, region):
-    return get_association_by_hid(subnet_id, region, 'subnet')
+    return association_get_csd_by_hid(subnet_id, region, 'subnet')
 

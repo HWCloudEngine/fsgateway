@@ -42,7 +42,7 @@ class ProxyAPP():
                         'password': password,
                         'insecure': True
                     }
-            LOG.debug('the kwargs is %s' %str(kwargs))
+            LOG.info('Get the cacaseding management url.')
             keystoneclient = kc.Client(**kwargs)
             management_url = keystoneclient.service_catalog.url_for(service_type=service_type,
                                                           attr='region',
@@ -57,13 +57,14 @@ class ProxyAPP():
             if '/' in management_url:
                 management_url = management_url[:management_url.find('/')]
             management_url = proc + management_url
-            LOG.debug('the management_url is %s' %management_url)
+            LOG.debug('the management_url is %s', management_url)
         except Exception:
-            LOG.error('find the mamagement_url failed %s' %traceback.format_exc())
+            LOG.error('find the mamagement_url failed %s', traceback.format_exc())
             return render_response(status=(500, 'fs_gateway service error'))
         app = WSGIProxyApp(management_url)
         resp = app(environ,start_response)
-        LOG.debug('the result is %s ' %str(resp))
+        if not environ.get('PATH_INFO').endswith('extensions.json'):
+            LOG.debug('the result is %s ', str(resp))
         return resp
 
     @classmethod

@@ -58,6 +58,8 @@ def upgrade(migrate_engine):
     # network
     UniqueConstraint("hnetwork", "region", "deleted", table=network_association, 
                                 name="uniq_network0hnetwork0region0deleted").create()
+    UniqueConstraint("network", "region", "deleted", table=network_association, 
+                                name="uniq_network0network0region0deleted").create()
 
     # Common indexes (indexes we apply to all databases)
     # NOTE: order specific for MySQL diff support
@@ -85,8 +87,6 @@ def upgrade(migrate_engine):
         migrate_engine.execute(
             'ALTER DATABASE %s DEFAULT CHARACTER SET utf8' %
             migrate_engine.url.database)
-
-
 
 def downgrade(migrate_engine):
     meta = MetaData()

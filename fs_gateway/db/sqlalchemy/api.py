@@ -360,13 +360,9 @@ def association_delete(context, id, obj):
 @require_context
 def association_get_by_hid(context, hid, obj):
     filter = {'h' + obj : hid }
-    _associations = model_query(context, _association_get_model(obj)).\
-               filter_by(**filter)
-    return [ dict(r) for r in _associations ]
 
 @require_context
-def association_get_by_csd(context, id, obj):
-    filter = { obj : id }
-    _associations = model_query(context, _association_get_model(obj)).\
-               filter_by(**filter)
+def association_get(context, resource_name, **search_opts):
+    _associations = model_query(context, _association_get_model(resource_name)).\
+               filter_by(**search_opts)
     return [ dict(r) for r in _associations ]

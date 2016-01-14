@@ -25,16 +25,12 @@ class ProjectMappingMiddleware(wsgi.Middleware):
     @webob.dec.wsgify
     def __call__(self, req):
 
-        LOG.debug('############## path_info %s ### query %s -X %s', 
-                req.environ.get('PATH_INFO'), req.environ.get('QUERY_STRING'),
-                req.environ.get('REQUEST_METHOD'))
-
         cascading_tenant_id = req.environ.get('CASCADING_TENANT_ID')
         if cascading_tenant_id:
             cascaded_tenant_id = req.environ.get('CASCADED_TENANT_ID')
-            LOG.debug('the cascaded tenant id is %s' %cascaded_tenant_id)
+            LOG.debug('the cascaded tenant id is %s', cascaded_tenant_id)
             if not cascaded_tenant_id:
-                LOG.warn("can't found mapping for tenant id %s" % cascading_tenant_id)
+                LOG.warn("can't found mapping for tenant id %s", cascading_tenant_id)
                 cascaded_tenant_id = cascading_tenant_id
         
     

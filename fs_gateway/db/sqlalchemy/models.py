@@ -135,6 +135,8 @@ class NetworkAssociation(BASE, GWBase):
                                 # name="uniq_network0assoc_id0deleted"), 
         schema.UniqueConstraint("hnetwork", "region", "deleted",
                                 name="uniq_network0hnetwork0region0deleted"), 
+        schema.UniqueConstraint("network", "region", "deleted",
+                                name="uniq_network0network0region0deleted"), 
     )
 
     id = Column(Integer, primary_key=True)
@@ -151,6 +153,8 @@ class SubnetAssociation(BASE, GWBase):
                                 # name="uniq_subnet0assoc_id0deleted"), 
         schema.UniqueConstraint("hsubnet", "region", "deleted",
                                 name="uniq_subnet0hsubnet0region0deleted"), 
+        schema.UniqueConstraint("subnet", "region", "deleted",
+                                name="uniq_subnet0subnet0region0deleted"), 
     )
 
     id = Column(Integer, primary_key=True)

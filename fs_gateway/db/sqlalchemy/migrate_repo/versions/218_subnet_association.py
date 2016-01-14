@@ -58,6 +58,8 @@ def upgrade(migrate_engine):
     # subnet
     UniqueConstraint("hsubnet", "region", "deleted", table=subnet_association, 
                                 name="uniq_subnet0hsubnet0region0deleted").create()
+    UniqueConstraint("subnet", "region", "deleted", table=subnet_association, 
+                                name="uniq_subnet0subnet0region0deleted").create()
 
     # Common indexes (indexes we apply to all databases)
     # NOTE: order specific for MySQL diff support

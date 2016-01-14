@@ -28,31 +28,30 @@ class TokenMappingMiddleware(wsgi.Middleware):
 
     def _get_cascading_tenant_id(self, req):
         cascading_tenant_id = get_project_id(req)
+        if cascading_tenant_id:
+            return cascading_tenant_id
         old_token = req.environ.get('HTTP_X_AUTH_TOKEN')
-        if not cascading_tenant_id:
-            try:
-                kwargs = {
-                            'username':CONF.get('cascading_admin_user'),
-                            'password': CONF.get('cascading_admin_password'), 
-                            'auth_url': CONF.get('cascading_keystone_url'),
-                            'insecure': True,
-                            'tenant_name': CONF.get('cascading_tenant_name')
-                }
-                LOG.info('Get the cacaseding token_info.')
-                keystoneclient = kc.Client(**kwargs)
-                cascading_tenant_id = None
-                token_info = keystoneclient.tokens._get(kwargs['auth_url'] + "/tokens/%s" % old_token, 'access')
-                
-                cascading_tenant_id = token_info.tenant['id']
-            except AttributeError:
-                cascading_tenant_id = None
-                pass
-            except exceptions.NotFound:
-                LOG.warning('token not found %s', old_token)
-                with excutils.save_and_reraise_exception():
-                    LOG.error('get cascading tenant id failed.exception is %s' %traceback.format_exc())   
-            except Exception as e:
-                LOG.error('get cascading tenant id failed.exception is %s' %traceback.format_exc())
+        try:
+            kwargs = {
+                        'username':CONF.get('cascading_admin_user'),
+                        'password': CONF.get('cascading_admin_password'), 
+                        'auth_url': CONF.get('cascading_keystone_url'),
+                        'insecure': True,
+                        'tenant_name': CONF.get('cascading_tenant_name')
+            }
+            LOG.info('Get the cacaseding token_info.')
+            keystoneclient = kc.Client(**kwargs)
+            token_info = keystoneclient.tokens._get(kwargs['auth_url'] + "/tokens/%s" % old_token, 'access')
+            
+            cascading_tenant_id = token_info.tenant['id']
+        except AttributeError:
+            pass
+        except exceptions.NotFound:
+            LOG.warning('token not found %s', old_token)
+            with excutils.save_and_reraise_exception():
+                LOG.error('get cascading tenant id failed.exception is %s' %traceback.format_exc())   
+        except Exception as e:
+            LOG.error('get cascading tenant id failed.exception is %s' %traceback.format_exc())
         return cascading_tenant_id
 
     @webob.dec.wsgify
@@ -62,6 +61,9 @@ class TokenMappingMiddleware(wsgi.Middleware):
             
         if not old_token or not req.environ.get('HTTP_HOST').startswith(CONF.get('http_host_prefix')):
             return render_response(status=(401, 'Unauthorized'))
+
+        LOG.debug('############## %s %s' , 
+                repr(req), ' \n###body: ' + str(req.body) if req.body else '')
         user_info = cascading_token_to_user.get(old_token)
         new_token = None
         expire = CONF.get('cascaded_token_expiration')
@@ -126,7 +128,7 @@ class TokenMappingMiddleware(wsgi.Middleware):
                     'password': password,
                     'insecure': True
                 }
-        LOG.info('the cacaseded auth_url %s, tenant_id %s, username %s', 
+        LOG.info('the cacaseded auth_url:%s, tenant_id:%s, username:%s', 
                 cascaded_keystone_url, cascaded_tenant_id, username)
         keystoneclient = kc.Client(**kwargs)
 
