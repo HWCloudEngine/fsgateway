@@ -628,7 +628,6 @@ class Router(object):
             # print (" not found " + req)
             return webob.exc.HTTPNotFound()
         app = match['controller']
-        LOG.error("getting app %s" % str(app))
         return app
 
 

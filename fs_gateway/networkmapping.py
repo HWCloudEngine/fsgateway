@@ -93,7 +93,10 @@ class NetworkMappingMiddleware(wsgi.Middleware):
             if hid:
                 LOG.warn("PUT %s action from proxy for %s (hybrid %s)",
                         name, csd, hid)
-                pass  # TODO
+
+                # TODO
+                render_response(status=(200, 'Success'), 
+                        body='{"network":{"id":"%s", "name" : "%s"}}' % (csd, name + '@' + hid))
 
         response = req.get_response(self.application)
 
