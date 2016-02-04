@@ -20,7 +20,7 @@ cloud_domain=${cloud_az}"."${cloud_dc}"."${postfix}
 
 v2v_gw_ip=${4}
 
-. /root/adminrc
+. adminrc
 keystone service-list > ${dir}/keystone_service_list.temp
 temp=`cat ${dir}/keystone_service_list.temp`
 for i in {1..10}
@@ -28,7 +28,7 @@ do
     if [ -n "${temp}" ]; then
         break
     else
-        . /root/adminrc
+        . adminrc
         keystone service-list > ${dir}/keystone_service_list.temp
         temp=`cat ${dir}/keystone_service_list.temp`
     fi

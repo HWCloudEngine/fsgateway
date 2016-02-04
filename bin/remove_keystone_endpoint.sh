@@ -11,7 +11,7 @@ az_localdz=${2}
 postfix=${3}
 az_region=${az_localaz}"."${az_localdz}
 
-. /root/adminrc
+. adminrc
 
 try_times=10
 echo "delete endpoint-list $(date)" >> ${RUN_LOG}
