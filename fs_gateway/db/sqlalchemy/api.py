@@ -362,7 +362,7 @@ def association_get_by_hid(context, hid, obj):
     filter = {'h' + obj : hid }
 
 @require_context
-def association_get(context, resource_name, **search_opts):
+def association_get_by_filter(context, resource_name, **search_opts):
     _associations = model_query(context, _association_get_model(resource_name)).\
                filter_by(**search_opts)
     return [ dict(r) for r in _associations ]

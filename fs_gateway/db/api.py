@@ -90,5 +90,5 @@ def association_get_all(context, name):
     """get all associations. """
     return IMPL.association_get_all(context, name)
 
-def association_get(context, resource_name, **search_opts):
+def association_get_by_filter(context, resource_name, **search_opts):
     return IMPL.association_get(context, resource_name, **search_opts)
