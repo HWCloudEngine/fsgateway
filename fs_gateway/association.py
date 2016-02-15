@@ -73,7 +73,7 @@ def create_router(mapper):
 
 
 def association_get(resource_name, **search_opts):
-    result = db.association_get_filter(defaultContext, resource_name, **search_opts)
+    result = db.association_get_by_filter(defaultContext, resource_name, **search_opts)
     return result
 
 def association_get_hids_by_csd(csd, region, resource_name):

@@ -178,4 +178,4 @@ echo "operate $1, check by $log $(date)"
         usage
     ;;
     esac
-} 2>&1 >>$log
+} >>$log 2>&1
