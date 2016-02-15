@@ -17,6 +17,8 @@ install() {
     old_dir="$(pwd)"
     
     cd ${fs_gateway_dir} 
+    # in case Windows add \r into bash scripts
+    dos2unix fs-gateway-api fs-gateway-proxy fs-gateway-manage 
 
     cp fs-gateway-api fs-gateway-proxy fs-gateway-manage "${binary_install_dir}"
 
@@ -36,8 +38,9 @@ install() {
     ## mk etc file
     mkdir /etc/fs-gateway
 
+    dos2unix fs-gateway.conf fs-gateway-paste.ini
     cp fs-gateway.conf fs-gateway-paste.ini /etc/fs-gateway
-    chown -R fsp:fsp /etc/fs-gateway
+    chown -R openstack:openstack /etc/fs-gateway
 
     cd "$old_dir"
  
@@ -53,6 +56,8 @@ install() {
     done
   
     echo "start fs_gateway watchdog..." 
+    dos2unix ${dir}/bin/fs_gateway_watchdog.sh
+
     cp ${dir}/bin/fs_gateway_watchdog.sh "${binary_install_dir}"/
     chmod 755 "${binary_install_dir}"/fs_gateway_watchdog.sh
 
