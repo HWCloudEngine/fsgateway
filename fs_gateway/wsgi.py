@@ -1351,9 +1351,8 @@ class JsonBodyMiddleware(Middleware):
         # Reject unrecognized content types. Empty string indicates
         # the client did not explicitly set the header
         if request.content_type not in ('application/json', '', 'plain/text'):
-            e = exception.ValidationError(attribute='application/json',
-                                          target='Content-Type header')
-            return render_exception(e, request=request)
+            LOG.warn("Maybe unsupport content type %s", request.content_type)
+            return
 
         params_parsed = {}
         try:
